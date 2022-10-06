@@ -7,11 +7,11 @@ streamlit.title('Zena\'s Amazing Athleisure Catalog')
 # connect to snowflake
 my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
 my_cur = my_cnx.cursor()
+my_cur.execute("SELECT CURRENT_USER(), CURRENT_ACCOUNT(), CURRENT_REGION()")
 
 # run a snowflake query and put it all in a var called my_catalog
-my_cur.execute("SELECT CURRENT_USER(), CURRENT_ACCOUNT(), CURRENT_REGION()")
-#my_cur.execute("select color_or_style from catalog_for_website")
-#my_catalog = my_cur.fetchall()
+my_cur.execute("select color_or_style from catalog_for_website")
+my_catalog = my_cur.fetchall()
 
 # put the dafta into a dataframe
 df = pandas.DataFrame(my_catalog)
@@ -30,8 +30,7 @@ option = streamlit.selectbox( 'Pick a sweatsuit color or style:', list(color_lis
 product_caption = 'Our warm, comfortable, ' + option + ' sweatsuit!'
 
 # use the option selected to go back and get all the info from the database
-#my_cur.execute("select direct_url, price, size_list, upsell_product_desc from CATALOG_FOR_WEBSITE where color_or_style = '" + option + "';")
-my_cur.execute("SELECT CURRENT_USER(), CURRENT_ACCOUNT(), CURRENT_REGION()")
+my_cur.execute("select direct_url, price, size_list, upsell_product_desc from CATALOG_FOR_WEBSITE where color_or_style = '" + option + "';")
 df2 = my_cur.fetchone()
 streamlit.image(
   df2[0],
